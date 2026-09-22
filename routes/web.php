@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\FrontController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PegawaiController; // <-- TAMBAHKAN INI
 
 // ==========================================
 // AREA PUBLIK (Bisa diakses tanpa login)
@@ -11,26 +12,25 @@ use App\Http\Controllers\DashboardController;
 Route::get('/', [FrontController::class, 'index'])->name('front.index');
 Route::get('/api/wilayah/{provinsi_id}', [FrontController::class, 'getWilayah']);
 
-
 // ==========================================
 // AREA ADMIN (Wajib Login)
 // ==========================================
 Route::middleware(['auth', 'verified'])->group(function () {
     
-    // 1. Kerangka Dashboard (Sidebar & Navbar)
+    // Kerangka Dashboard Admin (Sidebar & Navbar)
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
-    // 2. Isi Default Iframe Dashboard
+    // Isi Default Iframe Dashboard di tengah layar
     Route::get('/dashboard/main', function () {
         return "<h3 style='font-family:sans-serif; text-align:center; margin-top:20%; color:#003B73;'>Selamat datang! Kita akan memigrasikan isi file dashboard.php Anda ke kotak ini pada tahap selanjutnya.</h3>";
     })->name('dashboard.main');
 
     // -----------------------------------------------------------
-    // NANTI LETAKKAN ROUTE BARU LAINNYA DI SINI
-    // Contoh: 
-    // Route::get('/kompetitor/peta', [KompetitorController::class, 'peta']);
-    // Route::get('/ongkir/data', [OngkirController::class, 'index']);
+    // ROUTE UNTUK PEGAWAI / ADMIN
     // -----------------------------------------------------------
+    // Route khusus Admin untuk mereset paksa password pegawai (Bypass Email)
+    Route::post('/pegawai/{id}/reset-password', [PegawaiController::class, 'forceResetPassword'])->name('pegawai.force-reset');
+
 
     // Rute Profile bawaan Laravel Breeze (Biarkan saja)
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
