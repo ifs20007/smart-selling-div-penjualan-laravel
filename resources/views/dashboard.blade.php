@@ -184,7 +184,7 @@
                 </a>
                 <ul class="submenu" id="userMenu">
                     <li>
-                        <a href="#" target="contentFrame" onclick="updateTitle('<i class=\'fa-solid fa-users text-warning\'></i> Manajemen Akses')">
+                        <a href="{{ route('pegawai.index') }}" target="contentFrame" onclick="updateTitle('<i class=\'fa-solid fa-users text-warning\'></i> Manajemen Akses')">
                             <i class="fa-solid fa-user-tie"></i> Data Pegawai
                         </a>
                     </li>
