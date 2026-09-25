@@ -124,10 +124,10 @@
                     <i class="fa-solid fa-chevron-down" style="font-size: 12px; color:rgba(255,255,255,0.5);"></i>
                 </a>
                 <ul class="submenu" id="kompetitorMenu">
-                    <li><a href="#" target="contentFrame" onclick="updateTitle('<i class=\'fa-solid fa-map-location-dot text-warning\'></i> Peta Interaktif')"><i class="fa-solid fa-map"></i> Peta Wilayah</a></li>
+                    <li><a href="{{ route('kompetitor.index') }}" target="contentFrame" onclick="updateTitle('<i class=\'fa-solid fa-map-location-dot text-warning\'></i> Peta Interaktif')"><i class="fa-solid fa-map"></i> Peta Wilayah</a></li>
                     
                     @if(auth()->user()->role == 'Admin')
-                    <li><a href="#" target="contentFrame" onclick="updateTitle('<i class=\'fa-solid fa-server text-warning\'></i> Database Kompetitor')"><i class="fa-solid fa-table"></i> Data Kompetitor</a></li>
+                    <li><a href="{{ route('kategori-kompetitor.index') }}" target="contentFrame" onclick="updateTitle('<i class=\'fa-solid fa-server text-warning\'></i> Database Kompetitor')"><i class="fa-solid fa-table"></i> Data Kompetitor</a></li>
                     @endif
                 </ul>
             </li>
