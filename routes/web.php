@@ -44,8 +44,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Rute untuk Daftar Kompetitor
     Route::resource('kategori-kompetitor', KategoriKompetitorController::class);
-
-    // Rute untuk Daftar Cabang/Agen Resmi Kompetitor
+    
     Route::resource('kompetitor', KompetitorController::class);
 });
 
