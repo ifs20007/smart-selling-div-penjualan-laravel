@@ -32,6 +32,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // -----------------------------------------------------------
     // Route resource otomatis menangani index, create, store, edit, update, destroy
     Route::resource('pegawai', PegawaiController::class)->except(['show']);
+
+    Route::put('/pegawai/{id}/reset-password', [App\Http\Controllers\PegawaiController::class, 'forceResetPassword'])->name('pegawai.reset-password');
     
     // Route khusus Admin untuk mereset paksa password pegawai (Bypass Email)
     Route::post('/pegawai/{id}/reset-password', [PegawaiController::class, 'forceResetPassword'])->name('pegawai.force-reset');
