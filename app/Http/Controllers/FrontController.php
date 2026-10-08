@@ -36,9 +36,15 @@ class FrontController extends Controller
                 )
                 ->get()
                 ->map(function ($item) use ($berat) {
-                    $item->total_harga = $item->harga_per_kg * $berat;
+                    $item->total_harga = $item->harga_per_kg * ceil($berat);
+                    $item->is_pos = (stripos($item->ekspedisi, 'POS') !== false) ? 0 : 1;
                     return $item;
-                });
+                })
+                ->sortBy([
+                    ['is_pos', 'asc'],
+                    ['total_harga', 'asc'],
+                ])
+                ->values();
 
             if ($data_ongkir->isNotEmpty()) {
                 $nama_tujuan = $data_ongkir->first()->nama_wilayah;

@@ -138,10 +138,10 @@
                     <i class="fa-solid fa-chevron-down" style="font-size: 12px; color:rgba(255,255,255,0.5);"></i>
                 </a>
                 <ul class="submenu" id="ongkirMenu">
-                    <li><a href="#" target="contentFrame" onclick="updateTitle('<i class=\'fa-solid fa-calculator text-warning\'></i> Komparasi Cek Ongkir')"><i class="fa-solid fa-calculator"></i> Cek Ongkir</a></li>
+                    <li><a href="{{ route('cek-ongkir.komparasi') }}" target="contentFrame" onclick="updateTitle('<i class=\'fa-solid fa-calculator text-warning\'></i> Komparasi Cek Ongkir')"><i class="fa-solid fa-calculator"></i> Cek Ongkir</a></li>
                     
                     @if(auth()->user()->role == 'Admin')
-                    <li><a href="#" target="contentFrame" onclick="updateTitle('<i class=\'fa-solid fa-money-check-dollar text-warning\'></i> Master Tarif Ekspedisi')"><i class="fa-solid fa-table-list"></i> Data Ongkir</a></li>
+                    <li><a href="{{ route('data-ongkir.index') }}" target="contentFrame" onclick="updateTitle('<i class=\'fa-solid fa-money-check-dollar text-warning\'></i> Master Tarif Ekspedisi')"><i class="fa-solid fa-table-list"></i> Data Ongkir</a></li>
                     @endif
                 </ul>
             </li>
