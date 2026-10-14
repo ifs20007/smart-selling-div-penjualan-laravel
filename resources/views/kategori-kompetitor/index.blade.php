@@ -72,13 +72,21 @@
                     @endphp
                     <div class="clean-card">
                         <div class="card-top">
-                            <!-- INI PERBAIKAN LOGO WARNA YANG ERROR SEBELUMNYA -->
-                            <div class="card-logo" style="background-color: {{ $item->kode_warna ?? '#003B73' }};">
-                                {{ $item->inisial ?? substr($item->nama_kategori, 0, 3) }}
-                            </div>
+                            @if($item->logo_url)
+                                <div class="card-logo" style="background-color: #ffffff; border: 1.5px solid var(--border-light); padding: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.06);">
+                                    <img src="{{ $item->logo_url }}" alt="{{ $item->nama_kategori }}" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                                </div>
+                            @else
+                                <div class="card-logo" style="background-color: {{ $item->kode_warna ?? '#003B73' }};">
+                                    {{ $item->inisial ?? substr($item->nama_kategori, 0, 3) }}
+                                </div>
+                            @endif
                             <div class="card-title-group">
                                 <h4>{{ $item->nama_kategori }}</h4>
-                                <div class="card-badge"><i class="fa-solid fa-tag mr-1"></i> Kode: {{ $item->inisial }}</div>
+                                <div class="card-badge" style="display: inline-flex; align-items: center; gap: 6px;">
+                                    <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: {{ $item->kode_warna ?? '#003B73' }};"></span>
+                                    <span>Kode: <b>{{ $item->inisial }}</b></span>
+                                </div>
                             </div>
                         </div>
 

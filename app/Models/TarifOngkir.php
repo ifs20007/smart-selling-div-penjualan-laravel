@@ -7,15 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 class TarifOngkir extends Model
 {
     protected $table = 'tarif_ongkir';
+
     protected $primaryKey = 'tarif_ongkir_id';
+
     public $timestamps = false;
 
     protected $fillable = [
-        'wilayah_id', 
-        'kategori_kompetitor_id', 
-        'jenis_layanan', 
-        'harga_per_kg', 
-        'estimasi_waktu'
+        'wilayah_id',
+        'kategori_kompetitor_id',
+        'jenis_layanan',
+        'harga_per_kg',
+        'estimasi_waktu',
     ];
 
     public function wilayah()

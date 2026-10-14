@@ -9,7 +9,8 @@ class KategoriKompetitorController extends Controller
 {
     public function index()
     {
-        $kategori = KategoriKompetitor::orderBy('nama_kategori', 'ASC')->get();
+        $kategori = KategoriKompetitor::orderBy('kategori_kompetitor_id', 'ASC')->get();
+
         return view('kategori-kompetitor.index', compact('kategori'));
     }
 
@@ -28,12 +29,14 @@ class KategoriKompetitorController extends Controller
         ]);
 
         KategoriKompetitor::create($request->all());
+
         return redirect()->route('kategori-kompetitor.index')->with('success', 'Master Kompetitor ditambahkan.');
     }
 
     public function edit($id)
     {
         $kategori = KategoriKompetitor::findOrFail($id);
+
         return view('kategori-kompetitor.edit', compact('kategori'));
     }
 
@@ -47,12 +50,14 @@ class KategoriKompetitorController extends Controller
         ]);
 
         KategoriKompetitor::findOrFail($id)->update($request->all());
+
         return redirect()->route('kategori-kompetitor.index')->with('success', 'Master Kompetitor diperbarui.');
     }
 
     public function destroy($id)
     {
         KategoriKompetitor::findOrFail($id)->delete();
+
         return redirect()->route('kategori-kompetitor.index')->with('success', 'Master Kompetitor dihapus.');
     }
 }

@@ -108,39 +108,83 @@
             
             <div id="map" style="width: 100%; height: 450px; border-radius: 8px; border: 1px solid var(--border-light); z-index: 1;"></div>
             
+            <!-- Keterangan Pin Warna Ekspedisi pada Peta (Kode Hex / RGB) -->
+            <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border-light);">
+                <div style="font-size: 13px; font-weight: 700; color: var(--primary-navy); margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+                    <span><i class="fa-solid fa-tags" style="color: var(--accent-orange); margin-right: 6px;"></i> Legenda Pin Peta (Kode Hex / RGB Warna Ekspedisi):</span>
+                    <span style="font-size: 11.5px; color: var(--text-muted); font-weight: 600;">13 Entitas Ekspedisi</span>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(175px, 1fr)); gap: 8px;">
+                    @foreach($kategori_list as $kat)
+                        <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; color: var(--text-dark); background: #F8FAFC; padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border-light);">
+                            <span style="display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 22px; border-radius: 5px; background-color: {{ $kat->kode_warna ?? '#003B73' }}; color: #ffffff; font-size: 10px; font-weight: 800; box-shadow: 0 1px 3px rgba(0,0,0,0.15); flex-shrink: 0;">
+                                {{ $kat->inisial }}
+                            </span>
+                            <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="{{ $kat->nama_kategori }}">{{ $kat->nama_kategori }}</span>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+
             <div class="insight-box">
-                <i class="fa-solid fa-lightbulb text-warning" style="color: var(--accent-orange); margin-right: 5px;"></i> <strong>Saran Taktis:</strong> Visualisasi peta mempermudah penetrasi dan penentuan titik lokasi strategis jemput bola.
+                <i class="fa-solid fa-lightbulb text-warning" style="color: var(--accent-orange); margin-right: 5px;"></i> <strong>Saran Taktis:</strong> Visualisasi peta mempermudah penetrasi dan penentuan titik lokasi strategis jemput bola berdasarkan sebaran kompetitor di Pematangsiantar.
             </div>
         </div>
 
         <!-- Card Tabel Data Agen/Cabang -->
         <div class="clean-card">
-            <div class="card-header-clean">
-                <h5><i class="fa-solid fa-table-list" style="color:var(--primary-navy); margin-right:8px;"></i> Database Cabang / Agen Resmi Setiap Kompetitor</h5>
+            <div class="card-header-clean flex-wrap gap-2">
+                <div>
+                    <h5><i class="fa-solid fa-table-list" style="color:var(--primary-navy); margin-right:8px;"></i> Database Cabang / Agen Resmi Setiap Kompetitor</h5>
+                    <div style="font-size: 12px; color: var(--text-muted); margin-top: 3px;">Total <b id="branchTotalDisplay">{{ count($cabang) }}</b> titik cabang operasional terdata di Pematangsiantar</div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <select id="filterEkspedisi" onchange="filterBranchTable(this.value)" style="padding: 7px 14px; border-radius: 8px; border: 1px solid var(--border-light); font-size: 12.5px; font-weight: 600; color: var(--text-dark); background: #f8fafc; cursor: pointer; outline: none;">
+                        <option value="all">Semua Ekspedisi ({{ count($cabang) }})</option>
+                        @foreach($kategori_list as $kat)
+                            @php
+                                $cnt = $cabang->where('kategori_kompetitor_id', $kat->kategori_kompetitor_id)->count();
+                            @endphp
+                            <option value="{{ $kat->kategori_kompetitor_id }}">{{ $kat->nama_kategori }} ({{ $cnt }})</option>
+                        @endforeach
+                    </select>
+                </div>
             </div>
             
             <div class="table-responsive">
-                <table class="native-table">
+                <table class="native-table" id="branchTable">
                     <thead>
                         <tr>
                             <th style="width: 5%;">No</th>
                             <th style="width: 25%;">Nama Agen / Cabang</th>
-                            <th style="width: 15%;">Ekspedisi</th>
+                            <th style="width: 20%;">Ekspedisi</th>
                             <th style="width: 35%;">Alamat Lengkap</th>
-                            <th style="width: 20%; text-align: center;">Aksi</th>
+                            <th style="width: 15%; text-align: center;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($cabang as $index =>$item)
-                            <tr>
-                                <td>{{ $index + 1 }}</td>
-                                <td style="font-weight: 600;">{{ $item->nama_kompetitor }}</td>
+                            <tr class="branch-row" data-kategori-id="{{ $item->kategori_kompetitor_id }}">
+                                <td class="row-number">{{ $index + 1 }}</td>
+                                <td style="font-weight: 600; color: #1e293b;">{{ $item->nama_kompetitor }}</td>
                                 <td>
-                                    <span style="background-color: {{ $item->kategori->kode_warna ?? '#34495e' }}; color: white; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold;">
-                                        {{ $item->kategori->inisial ?? 'UMUM' }}
-                                    </span>
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        @if($item->kategori && $item->kategori->logo_url)
+                                            <div style="width: 32px; height: 32px; border-radius: 6px; background: #ffffff; border: 1.5px solid var(--border-light); display: flex; align-items: center; justify-content: center; padding: 3px; flex-shrink: 0; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
+                                                <img src="{{ $item->kategori->logo_url }}" alt="{{ $item->kategori->nama_kategori }}" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                                            </div>
+                                        @endif
+                                        <div>
+                                            <div style="font-size: 12.5px; font-weight: 700; color: var(--primary-navy); line-height: 1.2;">
+                                                {{ $item->kategori->nama_kategori ?? '-' }}
+                                            </div>
+                                            <span style="background-color: {{ $item->kategori->kode_warna ?? '#34495e' }}; color: white; padding: 2px 8px; border-radius: 12px; font-size: 9.5px; font-weight: 800; display: inline-block; margin-top: 3px;">
+                                                {{ $item->kategori->inisial ?? 'UMUM' }}
+                                            </span>
+                                        </div>
+                                    </div>
                                 </td>
-                                <td>{{ $item->alamat }}</td>
+                                <td style="color: var(--text-dark);"><i class="fa-solid fa-location-dot" style="color: var(--accent-orange); margin-right: 5px;"></i> {{ $item->alamat }}</td>
                                 <td style="text-align: center;">
                                     <div style="display: flex; justify-content: center; gap: 8px;">
                                         <a href="{{ $item->url }}" target="_blank" class="btn-action btn-maps" title="Lihat di Google Maps">
@@ -163,7 +207,7 @@
                                 </td>
                             </tr>
                         @empty
-                            <tr>
+                            <tr id="emptyRow">
                                 <td colspan="5" style="text-align: center; padding: 40px; color: var(--text-muted);">
                                     <i class="fa-solid fa-folder-open" style="font-size: 30px; margin-bottom: 10px;"></i><br>
                                     Belum ada titik agen yang didaftarkan.
@@ -191,6 +235,7 @@
             
             if(locations && locations.length > 0) {
                 locations.forEach(function(loc) {
+                    // Peta TETAP menggunakan warna kode HEX / RGB (custom pin bulat dengan warna ekspedisi)
                     var markerHtml = `
                         <div class="custom-pin" style="background-color: ${loc.color};">
                             <span>${loc.inisial}</span>
@@ -205,7 +250,10 @@
                     });
 
                     var popupContent = `
-                        <div style="font-family: 'Segoe UI', Tahoma, sans-serif; min-width: 200px;">
+                        <div style="font-family: 'Segoe UI', Tahoma, sans-serif; min-width: 220px;">
+                            <div style="font-size:11px; font-weight:800; color:${loc.color}; text-transform:uppercase; margin-bottom:3px;">
+                                ${loc.ekspedisi} (${loc.inisial})
+                            </div>
                             <div style="font-size:13.5px; font-weight:bold; color:var(--primary-navy); margin-bottom:5px; border-bottom:1px solid #E2E8F0; padding-bottom:5px;">
                                 ${loc.nama_kompetitor}
                             </div>
@@ -213,7 +261,7 @@
                                 ${loc.alamat}
                             </div>
                             <a href="${loc.url}" target="_blank" style="display:inline-block; background-color:#2ecc71; color:white; padding:6px 12px; text-decoration:none; border-radius:6px; font-size:11px; font-weight:bold;">
-                                <i class="fa-solid fa-map-location-dot"></i> Buka Maps
+                                <i class="fa-solid fa-map-location-dot"></i> Buka Google Maps
                             </a>
                         </div>
                     `;
@@ -224,5 +272,27 @@
                 });
             }
         });
+
+        // Filter Table Berdasarkan Ekspedisi
+        function filterBranchTable(kategoriId) {
+            var rows = document.querySelectorAll('.branch-row');
+            var visibleCount = 0;
+            rows.forEach(function(row) {
+                var rowKat = row.getAttribute('data-kategori-id');
+                if (kategoriId === 'all' || rowKat === String(kategoriId)) {
+                    row.style.display = '';
+                    visibleCount++;
+                    var numCell = row.querySelector('.row-number');
+                    if (numCell) numCell.textContent = visibleCount;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            var displaySpan = document.getElementById('branchTotalDisplay');
+            if (displaySpan) {
+                displaySpan.textContent = visibleCount;
+            }
+        }
     </script>
 </x-app-layout>

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class PegawaiController extends Controller
@@ -16,20 +16,26 @@ class PegawaiController extends Controller
         }
 
         $pegawai = User::orderBy('users_id', 'ASC')->get();
+
         return view('pegawai.index', compact('pegawai'));
     }
 
     // 2. FORM TAMBAH PEGAWAI (CREATE)
     public function create(Request $request)
     {
-        if ($request->user()->role !== 'Admin') abort(403);
+        if ($request->user()->role !== 'Admin') {
+            abort(403);
+        }
+
         return view('pegawai.create');
     }
 
     // 3. PROSES SIMPAN PEGAWAI BARU (STORE)
     public function store(Request $request)
     {
-        if ($request->user()->role !== 'Admin') abort(403);
+        if ($request->user()->role !== 'Admin') {
+            abort(403);
+        }
 
         $request->validate([
             'name' => 'required|string|max:255',
@@ -51,22 +57,27 @@ class PegawaiController extends Controller
     // 4. FORM EDIT PEGAWAI (EDIT)
     public function edit(Request $request, $id)
     {
-        if ($request->user()->role !== 'Admin') abort(403);
-        
+        if ($request->user()->role !== 'Admin') {
+            abort(403);
+        }
+
         $pegawai = User::findOrFail($id);
+
         return view('pegawai.edit', compact('pegawai'));
     }
 
     // 5. PROSES UPDATE PEGAWAI (UPDATE)
     public function update(Request $request, $id)
     {
-        if ($request->user()->role !== 'Admin') abort(403);
+        if ($request->user()->role !== 'Admin') {
+            abort(403);
+        }
 
         $pegawai = User::findOrFail($id);
 
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $pegawai->users_id . ',users_id',
+            'email' => 'required|email|unique:users,email,'.$pegawai->users_id.',users_id',
             'role' => 'required|in:Admin,Pegawai',
         ]);
 
@@ -82,16 +93,19 @@ class PegawaiController extends Controller
     // 6. PROSES HAPUS PEGAWAI (DELETE)
     public function destroy(Request $request, $id)
     {
-        if ($request->user()->role !== 'Admin') abort(403);
+        if ($request->user()->role !== 'Admin') {
+            abort(403);
+        }
 
         $pegawai = User::findOrFail($id);
-        
+
         // Mencegah Admin menghapus dirinya sendiri
         if ($pegawai->users_id === $request->user()->users_id) {
             return redirect()->route('pegawai.index')->with('error', 'Anda tidak dapat menghapus akun Anda sendiri saat sedang login!');
         }
 
         $pegawai->delete();
+
         return redirect()->route('pegawai.index')->with('success', 'Akun beserta seluruh rekam datanya berhasil dihapus.');
     }
 

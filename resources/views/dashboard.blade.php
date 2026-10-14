@@ -52,6 +52,9 @@
                 <ul class="submenu" id="ongkirMenu">
                     <li><a href="{{ route('cek-ongkir.komparasi') }}" target="contentFrame" onclick="updateTitle('<i class=\'fa-solid fa-calculator text-warning\'></i> Komparasi Cek Ongkir')"><i class="fa-solid fa-calculator"></i> Cek Ongkir</a></li>
                     
+                    <!-- [SANDBOX] Menu Cek Ongkir Tes - Hapus jika tidak digunakan -->
+                    <li><a href="{{ route('rajaongkir.sandbox.index') }}" target="contentFrame" onclick="updateTitle('<i class=\'fa-solid fa-vial text-warning\'></i> Cek Ongkir Tes (RajaOngkir)')"><i class="fa-solid fa-vial"></i> Cek Ongkir Tes</a></li>
+                    
                     @if(auth()->user()->role == 'Admin')
                     <li><a href="{{ route('data-ongkir.index') }}" target="contentFrame" onclick="updateTitle('<i class=\'fa-solid fa-money-check-dollar text-warning\'></i> Master Tarif Ekspedisi')"><i class="fa-solid fa-table-list"></i> Data Ongkir</a></li>
                     @endif
@@ -65,15 +68,15 @@
                 </a>
                 <ul class="submenu" id="crmMenu">
                     @if(auth()->user()->role == 'Admin')
-                    <li><a href="#" target="contentFrame" onclick="updateTitle('<i class=\'fa-solid fa-layer-group text-warning\'></i> Kategori Bisnis')"><i class="fa-solid fa-layer-group"></i> Kategori Bisnis</a></li>
+                    <li><a href="{{ route('kategori-toko.index') }}" target="contentFrame" onclick="updateTitle('<i class=\'fa-solid fa-layer-group text-warning\'></i> Kategori Bisnis')"><i class="fa-solid fa-layer-group"></i> Kategori Bisnis</a></li>
                     @endif
-                    <li><a href="#" target="contentFrame" onclick="updateTitle('<i class=\'fa-solid fa-address-book text-warning\'></i> Database Prospek')"><i class="fa-solid fa-store"></i> Data Prospek & Mitra</a></li>
+                    <li><a href="{{ route('daftar-toko.index') }}" target="contentFrame" onclick="updateTitle('<i class=\'fa-solid fa-address-book text-warning\'></i> Database Prospek')"><i class="fa-solid fa-store"></i> Data Prospek & Mitra</a></li>
                 </ul>
             </li>
 
             <li class="menu-item">
-                <a href="#" target="contentFrame" class="menu-link" id="menuForum" onclick="updateTitle('<i class=\'fa-solid fa-users text-warning\'></i> Aktivitas Internal'); handleMenuClick(this);">
-                    <span><i class="fa-regular fa-comments icon-left"></i> Aktivitas Pegawai</span>
+                <a href="{{ route('forum.index') }}" target="contentFrame" class="menu-link" id="menuForum" onclick="updateTitle('<i class=\'fa-solid fa-users text-warning\'></i> Aktivitas Internal'); handleMenuClick(this);">
+                    <span><i class="fa-regular fa-comments icon-left"></i> Aktivitas Internal</span>
                 </a>
             </li>
 
@@ -84,7 +87,7 @@
                     <i class="fa-solid fa-chevron-down" style="font-size: 12px; color:rgba(255,255,255,0.5);"></i>
                 </a>
                 <ul class="submenu" id="kampanyeMenu">
-                    <li><a href="#" target="contentFrame" onclick="updateTitle('<i class=\'fa-solid fa-comment-sms text-warning\'></i> Broadcast SMS')"><i class="fa-solid fa-paper-plane"></i> Broadcast SMS</a></li>
+                    <li><a href="{{ route('broadcast.index') }}" target="contentFrame" onclick="updateTitle('<i class=\'fa-solid fa-comment-sms text-warning\'></i> Broadcast SMS/WA')"><i class="fa-solid fa-paper-plane"></i> Broadcast SMS/WA</a></li>
                     <li><a href="#" target="contentFrame" onclick="updateTitle('<i class=\'fa-solid fa-newspaper text-warning\'></i> Pengelolaan Promosi Publik')"><i class="fa-solid fa-bullseye"></i> Forum Promosi</a></li>
                 </ul>
             </li>

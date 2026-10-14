@@ -11,19 +11,19 @@ class Kompetitor extends Model
 
     // Menyesuaikan dengan nama tabel di database
     protected $table = 'kompetitor';
-    
+
     // Mendefinisikan primary key karena tidak menggunakan standar 'id'
     protected $primaryKey = 'kompetitor_id';
 
     // Kolom-kolom yang diizinkan untuk diisi (Mass Assignment)
     protected $fillable = [
-        'kategori_kompetitor_id', 
-        'users_id', 
-        'nama_kompetitor', 
-        'alamat', 
-        'latitude', 
-        'longitude', 
-        'url'
+        'kategori_kompetitor_id',
+        'users_id',
+        'nama_kompetitor',
+        'alamat',
+        'latitude',
+        'longitude',
+        'url',
     ];
 
     // Relasi: Satu Cabang dimiliki oleh Satu Kategori Kompetitor

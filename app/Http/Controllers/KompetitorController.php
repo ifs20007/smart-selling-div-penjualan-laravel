@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Kompetitor;
 use App\Models\KategoriKompetitor;
+use App\Models\Kompetitor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -12,7 +12,10 @@ class KompetitorController extends Controller
     // 1. READ: Menampilkan Peta dan Daftar Cabang
     public function index()
     {
-        $cabang = Kompetitor::with(['kategori', 'user'])->orderBy('created_at', 'desc')->get();
+        $cabang = Kompetitor::with(['kategori', 'user'])
+            ->orderBy('kategori_kompetitor_id', 'ASC')
+            ->orderBy('kompetitor_id', 'ASC')
+            ->get();
 
         $lokasi_kompetitor = [];
         $kategori_list = [];
@@ -32,14 +35,11 @@ class KompetitorController extends Controller
                 'url' => $row->url ?? '#',
                 'ekspedisi' => $kat->nama_kategori ?? 'N/A',
                 'inisial' => $inisial,
-                'color' => $warna
+                'color' => $warna,
             ];
-
-            if ($kat && !in_array($kat->kategori_kompetitor_id, $kategori_ids)) {
-                $kategori_list[] = $kat;
-                $kategori_ids[] = $kat->kategori_kompetitor_id;
-            }
         }
+
+        $kategori_list = KategoriKompetitor::orderBy('kategori_kompetitor_id', 'ASC')->get();
 
         return view('kompetitor.index', compact('cabang', 'lokasi_kompetitor', 'kategori_list'));
     }
@@ -47,7 +47,8 @@ class KompetitorController extends Controller
     // 2. CREATE: Menampilkan form tambah
     public function create()
     {
-        $kategori = KategoriKompetitor::orderBy('nama_kategori', 'ASC')->get();
+        $kategori = KategoriKompetitor::orderBy('kategori_kompetitor_id', 'ASC')->get();
+
         return view('kompetitor.create', compact('kategori'));
     }
 
@@ -56,21 +57,21 @@ class KompetitorController extends Controller
     {
         $request->validate([
             'kategori_kompetitor_id' => 'required|integer',
-            'nama_kompetitor'        => 'required|string|max:255',
-            'alamat'                 => 'required|string',
-            'latitude'               => 'required|numeric',
-            'longitude'              => 'required|numeric',
-            'url'                    => 'required|url',
+            'nama_kompetitor' => 'required|string|max:255',
+            'alamat' => 'required|string',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+            'url' => 'required|url',
         ]);
 
         Kompetitor::create([
             'kategori_kompetitor_id' => $request->kategori_kompetitor_id,
-            'users_id'               => Auth::id(),
-            'nama_kompetitor'        => $request->nama_kompetitor,
-            'alamat'                 => $request->alamat,
-            'latitude'               => $request->latitude,
-            'longitude'              => $request->longitude,
-            'url'                    => $request->url,
+            'users_id' => Auth::id(),
+            'nama_kompetitor' => $request->nama_kompetitor,
+            'alamat' => $request->alamat,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
+            'url' => $request->url,
         ]);
 
         return redirect()->route('kompetitor.index')->with('success', 'Titik agen berhasil ditambahkan ke peta!');
@@ -80,12 +81,13 @@ class KompetitorController extends Controller
     public function edit($id)
     {
         $kompetitor = Kompetitor::findOrFail($id);
-        
+
         if (Auth::user()->role !== 'Admin' && $kompetitor->users_id !== Auth::id()) {
             return redirect()->route('kompetitor.index')->with('error', 'Akses Ditolak! Anda bukan pembuat data ini.');
         }
 
-        $kategori = KategoriKompetitor::orderBy('nama_kategori', 'ASC')->get();
+        $kategori = KategoriKompetitor::orderBy('kategori_kompetitor_id', 'ASC')->get();
+
         return view('kompetitor.edit', compact('kompetitor', 'kategori'));
     }
 
@@ -100,15 +102,15 @@ class KompetitorController extends Controller
 
         $request->validate([
             'kategori_kompetitor_id' => 'required|integer',
-            'nama_kompetitor'        => 'required|string|max:255',
-            'alamat'                 => 'required|string',
-            'latitude'               => 'required|numeric',
-            'longitude'              => 'required|numeric',
-            'url'                    => 'required|url',
+            'nama_kompetitor' => 'required|string|max:255',
+            'alamat' => 'required|string',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+            'url' => 'required|url',
         ]);
 
         $kompetitor->update($request->only([
-            'kategori_kompetitor_id', 'nama_kompetitor', 'alamat', 'latitude', 'longitude', 'url'
+            'kategori_kompetitor_id', 'nama_kompetitor', 'alamat', 'latitude', 'longitude', 'url',
         ]));
 
         return redirect()->route('kompetitor.index')->with('success', 'Data titik agen sukses diubah.');
@@ -124,6 +126,7 @@ class KompetitorController extends Controller
         }
 
         $kompetitor->delete();
+
         return redirect()->route('kompetitor.index')->with('success', 'Titik agen dihapus dari peta.');
     }
 }
