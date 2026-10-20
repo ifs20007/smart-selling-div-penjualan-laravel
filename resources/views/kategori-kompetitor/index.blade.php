@@ -99,7 +99,7 @@
                             <div class="branch-icon"><i class="fa-solid fa-store"></i></div>
                             <div class="branch-text">
                                 @if($jumlah_cabang > 0)
-                                    Terdeteksi <span class="branch-count">{{ $jumlah_cabang }}</span> agen resmi/cabang yang beroperasi.
+                                    Terdeteksi <span class="branch-count">{{ $jumlah_cabang }}</span> agen resmi/cabang yang beroperasi di Kota Pematangsiantar.
                                 @else
                                     Belum ada agen resmi yang terdata.
                                 @endif
